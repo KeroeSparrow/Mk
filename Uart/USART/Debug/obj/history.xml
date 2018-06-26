@@ -1,32 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
    <processor signature="arm-none-eabi-gcc noversion nomachine -mcpu=cortex-m3 -mthumb -Wall -ffunction-sections -g -O0 -c -DSTM32F103TB -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -D__ASSEMBLY__ -I..\..\..\..\..\Users\MKalinovskii -I..\..\..\..\..\Users\MKalinovskii\Uart\stm_lib -I..\..\..\..\..\Users\MKalinovskii\Uart -I..\..\..\..\..\Users\MKalinovskii\Uart\cmsis_boot -I..\..\..\..\..\Users\MKalinovskii\Uart\cmsis -I..\..\..\..\..\Users\MKalinovskii\Uart\stm_lib\inc">
-      <target file="syscalls.o" lastModified="16422da0b25">
+      <target file="syscalls.o" lastModified="1643cc73983">
          <source file="..\..\..\syscalls\syscalls.c" lastModified="1641ce9d91d"/>
       </target>
-      <target file="system_stm32f10x.o" lastModified="16422da099c">
+      <target file="system_stm32f10x.o" lastModified="1643cc73815">
          <source file="..\..\..\cmsis_boot\system_stm32f10x.c" lastModified="1641ce9be9e"/>
       </target>
-      <target file="main.o" lastModified="16422da0a5d">
-         <source file="..\..\..\main.c" lastModified="16422da0815"/>
+      <target file="main.o" lastModified="1643cc8684f">
+         <source file="..\..\..\main.c" lastModified="1643cc866f8"/>
       </target>
-      <target file="stm32f10x_gpio.o" lastModified="16422da0a04">
+      <target file="stm32f10x_gpio.o" lastModified="1643cc73883">
          <source file="..\..\..\stm_lib\src\stm32f10x_gpio.c" lastModified="1641ce9bea6"/>
       </target>
-      <target file="stm32f10x_usart.o" lastModified="16422da0af4">
+      <target file="stm32f10x_usart.o" lastModified="1643cc73962">
          <source file="..\..\..\stm_lib\src\stm32f10x_usart.c" lastModified="1641ce9be94"/>
       </target>
-      <target file="stm32f10x_rcc.o" lastModified="16422da0aa8">
+      <target file="stm32f10x_rcc.o" lastModified="1643cc73910">
          <source file="..\..\..\stm_lib\src\stm32f10x_rcc.c" lastModified="1641ce9bea4"/>
       </target>
-      <target file="startup_stm32f10x_md.o" lastModified="16422da09c1">
+      <target file="startup_stm32f10x_md.o" lastModified="1643cc7383d">
          <source file="..\..\..\cmsis_boot\startup\startup_stm32f10x_md.c" lastModified="1641ce9be98"/>
       </target>
-      <target file="misc.o" lastModified="16422da0b5b">
-         <source file="..\..\..\stm_lib\src\misc.c" lastModified="16422d1c0d8"/>
-      </target>
-      <target file="USART_Print.o" lastModified="16422da0964">
+      <target file="USART_Print.o" lastModified="1643cc737d9">
          <source file="..\..\..\example\USART_Print.c" lastModified="1641cf77a14"/>
+      </target>
+      <target file="misc.o" lastModified="1643cc739c3">
+         <source file="..\..\..\stm_lib\src\misc.c" lastModified="16422d1c0d8"/>
       </target>
    </processor>
 </history>

@@ -10,10 +10,18 @@ volatile uint16_t rx_wr_index=0,rx_rd_index=0;
 volatile uint16_t rx_counter=0;
 volatile uint8_t rx_buffer_overflow=0;
 
+// Буфер на передачу
+#define TX_BUFFER_SIZE 350 //размер буфера
+volatile uint8_t   tx_buffer[TX_BUFFER_SIZE];
+volatile uint16_t  tx_wr_index=0, //индекс хвоста буфера (куда писать данные)
+                   tx_rd_index=0, //индекс начала буфера (откуда читать данные)
+                   tx_counter=0; //количество данных в буфере
+
+int led_state=0;
+
 uint16_t get_char(void);
 
 void init_sequence(){
-
     GPIO_InitTypeDef gpio;
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 
@@ -48,38 +56,31 @@ void init_sequence(){
     USART.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;       // разрешаем прием и передачу
     USART_Init(USART1, &USART);
 
-    NVIC_InitTypeDef NVIC_InitStructure;
-    /* NVIC configuration */
-      NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-      NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQHandler();
-      NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-      NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-      NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-      NVIC_Init(&NVIC_InitStructure);
-
-    USART_Cmd(USART1, ENABLE);
     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+    USART_Cmd(USART1, ENABLE);
 
-
+    NVIC_EnableIRQ(USART1_IRQn);
 }
+
+
 
 
 
 
 //1 delay tick = 4 mcu ticks
 void delay_loop(uint32_t DelayTicks) {
-__asm__ __volatile__ (
-"1: \n"
-"sub %[DelayTicks], %[DelayTicks], #1\n" //1tick
-"cmp %[DelayTicks], #0 \n" // 1tick
-"bne 1b \n" //1 or 2 ticks
-: [DelayTicks] "+r"(DelayTicks)
-);
+	__asm__ __volatile__ (
+			"1: \n"
+			"sub %[DelayTicks], %[DelayTicks], #1\n" //1tick
+			"cmp %[DelayTicks], #0 \n" // 1tick
+			"bne 1b \n" //1 or 2 ticks
+			: [DelayTicks] "+r"(DelayTicks)
+	);
 }
 
 //send char
 void Usart_sendchar(uint16_t x){
-while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
         USART_SendData(USART1, x);
 }
 
@@ -92,70 +93,73 @@ void Usart_string(char* x){
 }
 
 //Converting int to string and send
-	void Usart_int(unsigned int x){
-		char str[20];
-		itoa(x, str, 10);
-		Usart_string(str);
+void Usart_int(unsigned int x){
+	char str[20];
+	itoa(x, str, 10);
+	Usart_string(str);
 }
 
 
+void USART1_IRQHandler(void) {
+	if(USART_GetITStatus(USART1, USART_IT_RXNE) == SET) {
+		      	if ((USART1->SR & (USART_FLAG_NE|USART_FLAG_FE|USART_FLAG_PE|USART_FLAG_ORE)) == 0) {
+						rx_buffer[rx_wr_index++]=(uint8_t)(USART_ReceiveData(USART1)& 0xFF);
+						if (rx_wr_index == RX_BUFFER_SIZE) rx_wr_index=0;
+						if (++rx_counter == RX_BUFFER_SIZE) {
+							rx_counter=0;
+							rx_buffer_overflow=1;
+						}
+					}
+					else USART_ReceiveData(USART1);//вообще здесь нужен обработчик ошибок, а мы просто пропускаем битый байт
 
+
+			  // uint8_t byte = USART1->DR;
+			 // Usart_sendchar(byte);
+		  }
+	}
+
+uint16_t get_char(void)
+{
+	uint16_t data;
+	while (rx_counter==0);
+	data=rx_buffer[rx_rd_index++];
+	if (rx_rd_index == RX_BUFFER_SIZE) rx_rd_index=0;
+	USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
+	--rx_counter;
+	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	return data;
+}
 
 	//main
 int main(void) {
-	init_sequence;
+	init_sequence();
         Usart_string("\n\r'1' to on, 0 to off \n\r");
         //Usart_string("Count: ");
 
-        int led_state=0;
-        //uint16_t count=0;
+       uint16_t count=0;
 	while(1) {
-		 Usart_sendchar(get_char());
+		if (get_char()=='1') {led_state=0;}
+			else if (get_char()=='0') {led_state=1;}
+			else{Usart_string("\n\r Error");}
+		GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
 
+		//USART_ReceiveData(USART1);
 		/*led_state = !led_state;
 	    GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
 		count++;
-        delay_loop(SystemCoreClock);
+        delay_loop(SystemCoreClock/120);
         led_state = !led_state;
         GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
         Usart_int(count);
         Usart_string(" ");
-        delay_loop(SystemCoreClock/120);
+        delay_loop(SystemCoreClock/240);
         if (count>100000) {count=0;}*/
 	}
 }
 
 
-uint16_t get_char(void)
-{
-uint16_t data;
-while (rx_counter==0);
-data=rx_buffer[rx_rd_index++];
-if (rx_rd_index == RX_BUFFER_SIZE) rx_rd_index=0;
-USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
---rx_counter;
-USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-return data;
-}
 
 
-void USART2_IRQHandler(void)
-	{
-	  if(USART_GetITStatus(USART1, USART_IT_RXNE) == SET)
-	  {
-	                if ((USART1->SR & (USART_FLAG_NE|USART_FLAG_FE|USART_FLAG_PE|USART_FLAG_ORE)) == 0)
-	                {
-	                        rx_buffer[rx_wr_index++]=(uint8_t)(USART_ReceiveData(USART1)& 0xFF);
-	                        if (rx_wr_index == RX_BUFFER_SIZE) rx_wr_index=0;
-	                        if (++rx_counter == RX_BUFFER_SIZE)
-	                                {
-	                                rx_counter=0;
-	                                rx_buffer_overflow=1;
-	                                }
-	                }
-	                else USART_ReceiveData(USART1);//вообще здесь нужен обработчик ошибок, а мы просто пропускаем битый байт
-	        }
-	}
 
 
 
