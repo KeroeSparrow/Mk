@@ -103,12 +103,8 @@ void Usart_int(unsigned int x){
 void USART1_IRQHandler(void) {
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) == SET) {
 		      	if ((USART1->SR & (USART_FLAG_NE|USART_FLAG_FE|USART_FLAG_PE|USART_FLAG_ORE)) == 0) {
-						rx_buffer[rx_wr_index++]=(uint8_t)(USART_ReceiveData(USART1)& 0xFF);
-						if (rx_wr_index == RX_BUFFER_SIZE) rx_wr_index=0;
-						if (++rx_counter == RX_BUFFER_SIZE) {
-							rx_counter=0;
-							rx_buffer_overflow=1;
-						}
+						rx_buffer[rx_wr_index]=(uint8_t)(USART_ReceiveData(USART1)& 0xFF);
+						rx_wr_index=(rx_wr_index+1)%RX_BUFFER_SIZE;
 					}
 					else USART_ReceiveData(USART1);//вообще здесь нужен обработчик ошибок, а мы просто пропускаем битый байт
 
@@ -121,26 +117,28 @@ void USART1_IRQHandler(void) {
 uint16_t get_char(void)
 {
 	uint16_t data;
-	while (rx_counter==0);
-	data=rx_buffer[rx_rd_index++];
-	if (rx_rd_index == RX_BUFFER_SIZE) rx_rd_index=0;
-	USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
-	--rx_counter;
-	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	while (rx_rd_index==rx_wr_index);
+	data = rx_buffer[rx_rd_index];
+	rx_rd_index = (rx_rd_index+1)%RX_BUFFER_SIZE;
+	Usart_sendchar(data);
 	return data;
 }
 
 	//main
 int main(void) {
 	init_sequence();
-        Usart_string("\n\r'1' to on, 0 to off \n\r");
+        Usart_string("\n\on to on, о of off \n\r");
         //Usart_string("Count: ");
 
        uint16_t count=0;
 	while(1) {
-		if (get_char()=='1') {led_state=0;}
-			else if (get_char()=='0') {led_state=1;}
-			else{Usart_string("\n\r Error");}
+		if (get_char()=='o') {
+			if (get_char()=='n') led_state=0;
+			else {
+				if  (get_char()=='f')   led_state=1;
+			}
+		}
+			else{Usart_string("\n\rError\n\r");}
 		GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
 
 		//USART_ReceiveData(USART1);
