@@ -121,7 +121,7 @@ uint16_t get_char(void)
 	//main
 int main(void) {
 	init_sequence();
-        Usart_string("\n\on to on, î of off \n\r");
+        Usart_string("on to on, off to off \n\r");
         //Usart_string("Count: ");
 
        uint16_t count=0;
@@ -132,7 +132,7 @@ int main(void) {
 				if  (get_char()=='f')   led_state=1;
 			}
 		}
-			else{Usart_string("\n\rError\n\r");}
+			//else{Usart_string("\n\rError\n\r");}
 		GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
 	}
 }
