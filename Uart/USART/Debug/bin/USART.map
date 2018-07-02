@@ -855,7 +855,7 @@ Linker script and memory map
 
                 0x20005000                _eram = 0x20005000
 
-.text           0x08000000      0xd15
+.text           0x08000000      0xcf6
  *(.isr_vector)
  .isr_vector    0x08000000      0x10c ..\obj\startup_stm32f10x_md.o
                 0x08000000                g_pfnVectors
@@ -945,42 +945,42 @@ Linker script and memory map
                 0x080005cc       0x3c ..\obj\main.o
                 0x080005cc                Usart_string
  .text.USART1_IRQHandler
-                0x08000608       0x94 ..\obj\main.o
+                0x08000608       0x78 ..\obj\main.o
                 0x08000608                USART1_IRQHandler
  .text.get_char
-                0x0800069c       0x7c ..\obj\main.o
-                0x0800069c                get_char
- .text.main     0x08000718       0x68 ..\obj\main.o
-                0x08000718                main
+                0x08000680       0x70 ..\obj\main.o
+                0x08000680                get_char
+ .text.main     0x080006f0       0x74 ..\obj\main.o
+                0x080006f0                main
  .text.RCC_GetClocksFreq
-                0x08000780      0x160 ..\obj\stm32f10x_rcc.o
-                0x08000780                RCC_GetClocksFreq
+                0x08000764      0x160 ..\obj\stm32f10x_rcc.o
+                0x08000764                RCC_GetClocksFreq
  .text.RCC_APB2PeriphClockCmd
-                0x080008e0       0x3c ..\obj\stm32f10x_rcc.o
-                0x080008e0                RCC_APB2PeriphClockCmd
+                0x080008c4       0x3c ..\obj\stm32f10x_rcc.o
+                0x080008c4                RCC_APB2PeriphClockCmd
  .text.USART_Init
-                0x0800091c      0x178 ..\obj\stm32f10x_usart.o
-                0x0800091c                USART_Init
+                0x08000900      0x178 ..\obj\stm32f10x_usart.o
+                0x08000900                USART_Init
  .text.USART_Cmd
-                0x08000a94       0x40 ..\obj\stm32f10x_usart.o
-                0x08000a94                USART_Cmd
+                0x08000a78       0x40 ..\obj\stm32f10x_usart.o
+                0x08000a78                USART_Cmd
  .text.USART_ITConfig
-                0x08000ad4       0x90 ..\obj\stm32f10x_usart.o
-                0x08000ad4                USART_ITConfig
+                0x08000ab8       0x90 ..\obj\stm32f10x_usart.o
+                0x08000ab8                USART_ITConfig
  .text.USART_SendData
-                0x08000b64       0x24 ..\obj\stm32f10x_usart.o
-                0x08000b64                USART_SendData
+                0x08000b48       0x24 ..\obj\stm32f10x_usart.o
+                0x08000b48                USART_SendData
  .text.USART_ReceiveData
-                0x08000b88       0x20 ..\obj\stm32f10x_usart.o
-                0x08000b88                USART_ReceiveData
+                0x08000b6c       0x20 ..\obj\stm32f10x_usart.o
+                0x08000b6c                USART_ReceiveData
  .text.USART_GetFlagStatus
-                0x08000ba8       0x38 ..\obj\stm32f10x_usart.o
-                0x08000ba8                USART_GetFlagStatus
+                0x08000b8c       0x38 ..\obj\stm32f10x_usart.o
+                0x08000b8c                USART_GetFlagStatus
  .text.USART_GetITStatus
-                0x08000be0       0xb4 ..\obj\stm32f10x_usart.o
-                0x08000be0                USART_GetITStatus
- .text.strlen   0x08000c94       0x5c c:/program files (x86)/gnu tools arm embedded/5.2 2015q4/bin/../lib/gcc/arm-none-eabi/5.2.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strlen-stub.o)
-                0x08000c94                strlen
+                0x08000bc4       0xb4 ..\obj\stm32f10x_usart.o
+                0x08000bc4                USART_GetITStatus
+ .text.strlen   0x08000c78       0x5c c:/program files (x86)/gnu tools arm embedded/5.2 2015q4/bin/../lib/gcc/arm-none-eabi/5.2.1/../../../../arm-none-eabi/lib/armv7-m\libg.a(lib_a-strlen-stub.o)
+                0x08000c78                strlen
  *(.init)
  *(.fini)
  *crtbegin.o(.ctors)
@@ -994,38 +994,38 @@ Linker script and memory map
  *(SORT(.dtors.*))
  *(.dtors)
  *(.rodata*)
- .rodata        0x08000cf0       0x25 ..\obj\main.o
+ .rodata        0x08000cd4       0x22 ..\obj\main.o
  *(.eh_fram e*)
 
-.glue_7         0x08000d18        0x0
- .glue_7        0x08000d18        0x0 linker stubs
+.glue_7         0x08000cf8        0x0
+ .glue_7        0x08000cf8        0x0 linker stubs
 
-.glue_7t        0x08000d18        0x0
- .glue_7t       0x08000d18        0x0 linker stubs
+.glue_7t        0x08000cf8        0x0
+ .glue_7t       0x08000cf8        0x0 linker stubs
 
-.vfp11_veneer   0x08000d18        0x0
- .vfp11_veneer  0x08000d18        0x0 linker stubs
+.vfp11_veneer   0x08000cf8        0x0
+ .vfp11_veneer  0x08000cf8        0x0 linker stubs
 
-.v4_bx          0x08000d18        0x0
- .v4_bx         0x08000d18        0x0 linker stubs
+.v4_bx          0x08000cf8        0x0
+ .v4_bx         0x08000cf8        0x0 linker stubs
 
-.iplt           0x08000d18        0x0
- .iplt          0x08000d18        0x0 ..\obj\USART_Print.o
+.iplt           0x08000cf8        0x0
+ .iplt          0x08000cf8        0x0 ..\obj\USART_Print.o
 
-.rel.dyn        0x08000d18        0x0
- .rel.iplt      0x08000d18        0x0 ..\obj\USART_Print.o
+.rel.dyn        0x08000cf8        0x0
+ .rel.iplt      0x08000cf8        0x0 ..\obj\USART_Print.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x08000d18                __exidx_start = .
+                0x08000cf8                __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x08000d18                __exidx_end = .
-                0x08000d18                __etext = .
-                0x08000d15                _sidata = __etext
+                0x08000cf8                __exidx_end = .
+                0x08000cf8                __etext = .
+                0x08000cf6                _sidata = __etext
 
-.data           0x20000000       0x14 load address 0x08000d15
+.data           0x20000000       0x14 load address 0x08000cf6
                 0x20000000                __data_start__ = .
                 0x20000000                _sdata = __data_start__
  *(vtable)
@@ -1050,10 +1050,10 @@ Linker script and memory map
                 0x20000014                __data_end__ = .
                 0x20000014                _edata = __data_end__
 
-.igot.plt       0x20000014        0x0 load address 0x08000d2c
+.igot.plt       0x20000014        0x0 load address 0x08000d0c
  .igot.plt      0x20000014        0x0 ..\obj\USART_Print.o
 
-.bss            0x20000014      0x2d4 load address 0x08000d2c
+.bss            0x20000014      0x2d4 load address 0x08000d0c
                 0x20000014                . = ALIGN (0x4)
                 0x20000014                __bss_start__ = .
                 0x20000014                _sbss = __bss_start__
@@ -1083,7 +1083,7 @@ Linker script and memory map
  *(.heap*)
                 0x200002e8                __HeapLimit = .
 
-.co_stack       0x200002e8      0x400 load address 0x08001000
+.co_stack       0x200002e8      0x400 load address 0x08000fe0
                 0x200002e8                . = ALIGN (0x8)
  *(.co_stack .co_stack.*)
  .co_stack      0x200002e8      0x400 ..\obj\startup_stm32f10x_md.o
@@ -1146,13 +1146,13 @@ OUTPUT(USART.elf elf32-littlearm)
  .debug_ranges  0x00000128      0x108 ..\obj\stm32f10x_rcc.o
  .debug_ranges  0x00000230       0xf0 ..\obj\stm32f10x_usart.o
 
-.debug_line     0x00000000     0x1268
+.debug_line     0x00000000     0x1256
  .debug_line    0x00000000      0x210 ..\obj\system_stm32f10x.o
  .debug_line    0x00000210       0x98 ..\obj\startup_stm32f10x_md.o
  .debug_line    0x000002a8      0x3ac ..\obj\stm32f10x_gpio.o
- .debug_line    0x00000654      0x2df ..\obj\main.o
- .debug_line    0x00000933      0x4a7 ..\obj\stm32f10x_rcc.o
- .debug_line    0x00000dda      0x48e ..\obj\stm32f10x_usart.o
+ .debug_line    0x00000654      0x2cd ..\obj\main.o
+ .debug_line    0x00000921      0x4a7 ..\obj\stm32f10x_rcc.o
+ .debug_line    0x00000dc8      0x48e ..\obj\stm32f10x_usart.o
 
 .debug_str      0x00000000     0x1368
  .debug_str     0x00000000      0x27e ..\obj\system_stm32f10x.o

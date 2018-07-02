@@ -10,12 +10,11 @@ volatile uint16_t rx_wr_index=0,rx_rd_index=0;
 volatile uint16_t rx_counter=0;
 volatile uint8_t rx_buffer_overflow=0;
 
-// Буфер на передачу
-#define TX_BUFFER_SIZE 350 //размер буфера
+// USART Transfer buffer
+#define TX_BUFFER_SIZE 350
 volatile uint8_t   tx_buffer[TX_BUFFER_SIZE];
-volatile uint16_t  tx_wr_index=0, //индекс хвоста буфера (куда писать данные)
-                   tx_rd_index=0, //индекс начала буфера (откуда читать данные)
-                   tx_counter=0; //количество данных в буфере
+volatile uint16_t  tx_wr_index=0, //End index
+                   tx_rd_index=0; //start index
 
 int led_state=0;
 
@@ -34,7 +33,6 @@ void init_sequence(){
     //GPIO_PinLockConfig(GPIO_Mode_AF_USART2 GPIOA, GPIO_PinSource2);
     //GPIO_PinLockConfig(GPIO_Mode_AF_USART2 GPIOA, GPIO_PinSource3);
 
-    //заполняем поля структуры
     // PD5 -> TX UART.
     gpio.GPIO_Mode = GPIO_Mode_AF_PP;
     gpio.GPIO_Pin = GPIO_Pin_9;
@@ -48,12 +46,12 @@ void init_sequence(){
     USART_InitTypeDef USART;
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
 
-    USART.USART_BaudRate = 9600;// скорость
-    USART.USART_WordLength = USART_WordLength_8b; //8 бит данных
-    USART.USART_StopBits = USART_StopBits_1; //один стоп бит
-    USART.USART_Parity = USART_Parity_No; //четность - нет
-    USART.USART_HardwareFlowControl = USART_HardwareFlowControl_None; // управлени потоком - нет
-    USART.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;       // разрешаем прием и передачу
+    USART.USART_BaudRate = 9600;// Baud speed
+    USART.USART_WordLength = USART_WordLength_8b; //8 bit of data
+    USART.USART_StopBits = USART_StopBits_1; //one stop bit
+    USART.USART_Parity = USART_Parity_No;
+    USART.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;       // allow  Rx & Tx
     USART_Init(USART1, &USART);
 
     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
@@ -103,57 +101,39 @@ void Usart_int(unsigned int x){
 void USART1_IRQHandler(void) {
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) == SET) {
 		      	if ((USART1->SR & (USART_FLAG_NE|USART_FLAG_FE|USART_FLAG_PE|USART_FLAG_ORE)) == 0) {
-						rx_buffer[rx_wr_index++]=(uint8_t)(USART_ReceiveData(USART1)& 0xFF);
-						if (rx_wr_index == RX_BUFFER_SIZE) rx_wr_index=0;
-						if (++rx_counter == RX_BUFFER_SIZE) {
-							rx_counter=0;
-							rx_buffer_overflow=1;
-						}
+						rx_buffer[rx_wr_index]=(uint8_t)(USART_ReceiveData(USART1)& 0xFF);
+						rx_wr_index=(rx_wr_index+1)%RX_BUFFER_SIZE;
 					}
-					else USART_ReceiveData(USART1);//вообще здесь нужен обработчик ошибок, а мы просто пропускаем битый байт
-
-
-			  // uint8_t byte = USART1->DR;
-			 // Usart_sendchar(byte);
+					else USART_ReceiveData(USART1);
 		  }
 	}
 
 uint16_t get_char(void)
 {
 	uint16_t data;
-	while (rx_counter==0);
-	data=rx_buffer[rx_rd_index++];
-	if (rx_rd_index == RX_BUFFER_SIZE) rx_rd_index=0;
-	USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
-	--rx_counter;
-	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	while (rx_rd_index==rx_wr_index);
+	data = rx_buffer[rx_rd_index];
+	rx_rd_index = (rx_rd_index+1)%RX_BUFFER_SIZE;
+	Usart_sendchar(data);
 	return data;
 }
 
 	//main
 int main(void) {
 	init_sequence();
-        Usart_string("\n\r'1' to on, 0 to off \n\r");
+        Usart_string("on to on, off to off \n\r");
         //Usart_string("Count: ");
 
        uint16_t count=0;
 	while(1) {
-		if (get_char()=='1') {led_state=0;}
-			else if (get_char()=='0') {led_state=1;}
-			else{Usart_string("\n\r Error");}
+		if (get_char()=='o') {
+			if (get_char()=='n') led_state=0;
+			else {
+				if  (get_char()=='f')   led_state=1;
+			}
+		}
+			//else{Usart_string("\n\rError\n\r");}
 		GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
-
-		//USART_ReceiveData(USART1);
-		/*led_state = !led_state;
-	    GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
-		count++;
-        delay_loop(SystemCoreClock/120);
-        led_state = !led_state;
-        GPIO_WriteBit(GPIOA, GPIO_Pin_1, led_state ? Bit_SET : Bit_RESET);
-        Usart_int(count);
-        Usart_string(" ");
-        delay_loop(SystemCoreClock/240);
-        if (count>100000) {count=0;}*/
 	}
 }
 
