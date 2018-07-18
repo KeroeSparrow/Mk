@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -g -nostartfiles -Map=zADANIE2.map -O0 --gc-sections -LC:\CooCox\CoIDE\configuration\ProgramData\zADANIE2 -TC:\CooCox\CoIDE\configuration\ProgramData\zADANIE2/arm-gcc-link.ld -g">
+      <target file="zADANIE2.elf" lastModified="16440c0a944">
+         <source file="..\obj\system_stm32f10x.o" lastModified="1643ca08be7"/>
+         <source file="..\obj\startup_stm32f10x_md.o" lastModified="1643ca08c3d"/>
+         <source file="..\obj\stm32f10x_gpio.o" lastModified="1643ca08caf"/>
+         <source file="..\obj\main.o" lastModified="16440c0a2e3"/>
+         <source file="..\obj\stm32f10x_rcc.o" lastModified="1643ca08d75"/>
+         <source file="..\obj\syscalls.o" lastModified="1643ca08dd8"/>
+      </target>
+   </processor>
+</history>
