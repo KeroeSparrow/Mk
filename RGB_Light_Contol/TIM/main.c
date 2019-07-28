@@ -1,8 +1,8 @@
 #include <stm32f10x_conf.h>
 
-#define redc 102
-#define greenc 102
-#define bluec 0
+#define redc 1
+#define greenc 255
+#define bluec 255
 
 void initPWM(char colour, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin,TIM_TypeDef* TIMx, int channel ){
 	TIM_OCInitTypeDef  TIM_OCInitStructure;

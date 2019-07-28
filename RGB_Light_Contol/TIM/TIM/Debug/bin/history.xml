@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -g -nostartfiles -Map=TIM.map -O0 --gc-sections -LC:\CooCox\CoIDE\configuration\ProgramData\TIM -TC:\CooCox\CoIDE\configuration\ProgramData\TIM/arm-gcc-link.ld -g">
-      <target file="TIM.elf" lastModified="164607a93cd">
-         <source file="..\obj\stm32f10x_tim.o" lastModified="1645b5e0baf"/>
-         <source file="..\obj\system_stm32f10x.o" lastModified="1645b5e0be8"/>
-         <source file="..\obj\startup_stm32f10x_md.o" lastModified="1645b5e0c0f"/>
-         <source file="..\obj\stm32f10x_gpio.o" lastModified="164604eac9e"/>
-         <source file="..\obj\main.o" lastModified="164607a9207"/>
-         <source file="..\obj\stm32f10x_rcc.o" lastModified="1645b5e0cd8"/>
-         <source file="..\obj\stm32f10x_exti.o" lastModified="1645b5e0d11"/>
-         <source file="..\obj\stm32f10x_usart.o" lastModified="1645b5e0d5f"/>
-         <source file="..\obj\syscalls.o" lastModified="1645b5e0d93"/>
-         <source file="..\obj\misc.o" lastModified="1645b5e0dca"/>
+   <processor signature="arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -g -nostartfiles -Map=TIM.map -O0 --gc-sections -LC:\CooCox\CoIDE\configuration\ProgramData\TIM -TC:\CooCox\CoIDE\configuration\ProgramData\TIM/link.ld -g">
+      <target file="TIM.elf" lastModified="164ae2d2792">
+         <source file="..\obj\stm32f10x_tim.o" lastModified="164ae271151"/>
+         <source file="..\obj\system_stm32f10x.o" lastModified="164ae2713b1"/>
+         <source file="..\obj\startup_stm32f10x_md.o" lastModified="164ae271527"/>
+         <source file="..\obj\stm32f10x_gpio.o" lastModified="164ae2716d9"/>
+         <source file="..\obj\main.o" lastModified="164ae2d2375"/>
+         <source file="..\obj\stm32f10x_rcc.o" lastModified="164ae271ca2"/>
+         <source file="..\obj\stm32f10x_exti.o" lastModified="164ae271e39"/>
+         <source file="..\obj\stm32f10x_usart.o" lastModified="164ae27207d"/>
+         <source file="..\obj\syscalls.o" lastModified="164ae2721e9"/>
+         <source file="..\obj\misc.o" lastModified="164ae27236e"/>
       </target>
    </processor>
 </history>
